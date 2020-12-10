@@ -16,17 +16,16 @@ public class CitybikesTests
 
 	@Test
 	public void testGetByCompanies(){
-		//String Company = "Nextbike GmbH";
-
+		
 		given().
 		when().
 		get(ENDPOINT_GET_CITYBIKES_BY_COUNTRIES)
 		.then().
 		statusCode(HttpStatus.SC_OK).
-		body(	"totalItems", equalTo(1),
-				"location.city", containsInAnyOrder("Frankfurt"),
-				"location.country", containsInAnyOrder("DE"),
-				"location.latitude", containsInAnyOrder("50.0709"),
-				"location.longitude", containsInAnyOrder("8.24322"));
+		body(	"networks.company", equalTo("Nextbike GmbH"),
+				"networks.location.city", containsInAnyOrder("Frankfurt"),
+				"networks.location.country", containsInAnyOrder("DE"),
+				"networks.location.latitude", containsInAnyOrder("50.0709"),
+				"networks.location.longitude", containsInAnyOrder("8.24322"));
 	}
 }

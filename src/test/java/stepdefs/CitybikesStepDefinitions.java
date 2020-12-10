@@ -23,44 +23,42 @@ public class CitybikesStepDefinitions{
 
     private String ENDPOINT_GET_CITYBIKES_BY_COUNTRIES = "http://api.citybik.es/v2/networks";
     
-    @Given("^I Set GET posts api endpoint$")
-    public void setGetEndpoint(){
-        response = request.when().get(ENDPOINT_GET_CITYBIKES_BY_COUNTRIES);
-        System.out.println("response: " + response.prettyPrint());
+    @Given("^a city bike exist within a company$")
+    public void GetEndpoint(){
+           request = given().header("Accept", "application/json");
     }
 
-    @Given("^a city bike exist within a company$") {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    });
-    
-    When("^a user retrieves the city by location$", () -> {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    });
-    
-    Then("^the status code is (\\d+)$", (Integer arg1) -> {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    });
-    
-    Then("^Response includes the following$", (DataTable arg1) -> {
-        // Write code here that turns the phrase above into concrete actions
-        // For automatic transformation, change DataTable to one of
-        // List<YourType>, List<List<E>>, List<Map<K,V>> or Map<K,V>.
-        // E,K,V must be a scalar (String, Integer, Date, enum etc)
-        throw new PendingException();
-    });
-    
-    Then("^response includes the following in order$", (DataTable arg1) -> {
-        // Write code here that turns the phrase above into concrete actions
-        // For automatic transformation, change DataTable to one of
-        // List<YourType>, List<List<E>>, List<Map<K,V>> or Map<K,V>.
-        // E,K,V must be a scalar (String, Integer, Date, enum etc)
-        throw new PendingException();
-    });
-    
+    @When("^a user retrieves the city by location$")
+    public void a_user_retrieves_the_city_by_location(){
+		response = request.when().get(ENDPOINT_GET_CITYBIKES_BY_COUNTRIES);
+		System.out.println("response: " + response.prettyPrint());
+    }
 
+	@Then("^the status code is (\\d+)$")
+	public void verify_status_code(int statusCode){
+		json = response.then().statusCode(statusCode);
+	}
+	@And("^response includes the following$")
+	public void response_equals(Map<String,String> responseFields){
+		for (Map.Entry<String, String> field : responseFields.entrySet()) {
+			if(StringUtils.isNumeric(field.getValue())){
+				json.body(field.getKey(), equalTo(Integer.parseInt(field.getValue())));
+			}
+			else{
+				json.body(field.getKey(), equalTo(field.getValue()));
+			}
+		}
+    }
     
-
+	@And("^response includes the following in any order$")
+	public void response_contains_in_any_order(Map<String,String> responseFields){
+		for (Map.Entry<String, String> field : responseFields.entrySet()) {
+			if(StringUtils.isNumeric(field.getValue())){
+				json.body(field.getKey(), containsInAnyOrder(Integer.parseInt(field.getValue())));
+			}
+			else{
+				json.body(field.getKey(), containsInAnyOrder(field.getValue()));
+			}
+		}
+	}
 }
